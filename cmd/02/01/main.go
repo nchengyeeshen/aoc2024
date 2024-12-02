@@ -41,13 +41,10 @@ func main() {
 }
 
 func safe(levels []int) bool {
-	diffs := make([]int, 0, len(levels)-1)
-	for i := 1; i < len(levels); i++ {
-		diffs = append(diffs, levels[i]-levels[i-1])
-	}
-
 	var posCount, negCount int
-	for _, diff := range diffs {
+	for i := 1; i < len(levels); i++ {
+		diff := levels[i] - levels[i-1]
+
 		// Differ by at least 1 and at most 3.
 		if diff == 0 || (diff < -3 || diff > 3) {
 			return false
@@ -64,7 +61,6 @@ func safe(levels []int) bool {
 			return false
 		}
 	}
-
 	return true
 }
 
