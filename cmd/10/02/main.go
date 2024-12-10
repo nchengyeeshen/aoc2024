@@ -40,40 +40,26 @@ func main() {
 		}
 	}
 
+	var total int
+	for _, th := range trailheads {
+		total += score(grid, th.x, th.y)
+	}
+
+	fmt.Println(total)
+}
+
+func score(grid [][]int, r, c int) int {
 	var (
-		pathCounts = make(map[point]map[point]int)
-		path       []point
-		helper     func(r, c, prev int)
+		summits int
+		helper  func(r, c int)
 	)
-	helper = func(r, c, prev int) {
-		if r < 0 || r >= len(grid) {
-			return
-		}
-		if c < 0 || c >= len(grid[0]) {
-			return
-		}
 
+	helper = func(r, c int) {
 		curr := grid[r][c]
-
-		if curr-prev != 1 {
-			return
-		}
-
 		if curr == 9 {
-			_, ok := pathCounts[point{r, c}]
-			if !ok {
-				pathCounts[point{r, c}] = make(map[point]int)
-			}
-
-			pathCounts[point{r, c}][path[0]]++
+			summits++
 			return
 		}
-
-		path = append(path, point{r, c})
-		defer func() {
-			path = path[:len(path)-1]
-		}()
-
 		possible := []point{
 			{r + 1, c},
 			{r - 1, c},
@@ -81,32 +67,19 @@ func main() {
 			{r, c + 1},
 		}
 		for _, pt := range possible {
-			if pt == path[len(path)-1] {
+			if pt.x < 0 || pt.x >= len(grid) || pt.y < 0 || pt.y >= len(grid[0]) {
 				continue
 			}
-			helper(pt.x, pt.y, curr)
-		}
-	}
-
-	scores := make(map[point]int)
-	for _, th := range trailheads {
-		helper(th.x, th.y, -1)
-
-		for _, connectedTrailheads := range pathCounts {
-			for cth, count := range connectedTrailheads {
-				if cth == th {
-					scores[th] += count
-				}
+			if grid[pt.x][pt.y]-curr != 1 {
+				continue
 			}
+			helper(pt.x, pt.y)
 		}
 	}
 
-	var total int
-	for _, sc := range scores {
-		total += sc
-	}
+	helper(r, c)
 
-	fmt.Println(total)
+	return summits
 }
 
 type point struct{ x, y int }
