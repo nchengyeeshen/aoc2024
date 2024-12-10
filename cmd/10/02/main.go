@@ -41,9 +41,9 @@ func main() {
 	}
 
 	var (
-		pathLengths = make(map[point]map[point]int)
-		path        []point
-		helper      func(r, c, prev int)
+		pathCounts = make(map[point]map[point]int)
+		path       []point
+		helper     func(r, c, prev int)
 	)
 	helper = func(r, c, prev int) {
 		if r < 0 || r >= len(grid) {
@@ -60,12 +60,12 @@ func main() {
 		}
 
 		if curr == 9 {
-			_, ok := pathLengths[point{r, c}]
+			_, ok := pathCounts[point{r, c}]
 			if !ok {
-				pathLengths[point{r, c}] = make(map[point]int)
+				pathCounts[point{r, c}] = make(map[point]int)
 			}
 
-			pathLengths[point{r, c}][path[0]]++
+			pathCounts[point{r, c}][path[0]]++
 			return
 		}
 
@@ -92,7 +92,7 @@ func main() {
 	for _, th := range trailheads {
 		helper(th.x, th.y, -1)
 
-		for _, connectedTrailheads := range pathLengths {
+		for _, connectedTrailheads := range pathCounts {
 			for cth, count := range connectedTrailheads {
 				if cth == th {
 					scores[th] += count
