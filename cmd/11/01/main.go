@@ -44,17 +44,6 @@ func transform(stones []string) []string {
 	return result
 }
 
-// func digits(v int) []int {
-// 	var result []int
-// 	for v > 0 {
-// 		digit := v % 10
-// 		result = append(result, digit)
-// 		v /= 10
-// 	}
-// 	slices.Reverse(result)
-// 	return result
-// }
-
 func must[T any](v T, err error) T {
 	if err != nil {
 		panic(err)
