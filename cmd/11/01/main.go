@@ -19,41 +19,26 @@ func main() {
 		" ",
 	)
 
-	stoneCounts := make(map[string]int)
-	for _, stone := range stones {
-		stoneCounts[stone]++
+	for range 25 {
+		stones = transform(stones)
 	}
 
-	for range 75 {
-		stoneCounts = transform(stoneCounts)
-	}
-
-	var total int
-	for _, count := range stoneCounts {
-		total += count
-	}
-	fmt.Println(total)
+	fmt.Println(len(stones))
 }
 
-func transform(counts map[string]int) map[string]int {
-	result := make(map[string]int)
-	for stone, count := range counts {
-		if count == 0 {
-			continue
-		}
-
+func transform(stones []string) []string {
+	var result []string
+	for _, stone := range stones {
 		switch {
 		case stone == "0":
-			result["1"] += count
+			result = append(result, "1")
 		case len(stone)%2 == 0:
 			left, right := stone[:len(stone)/2], stone[len(stone)/2:]
-			right = cmp.Or(strings.TrimLeft(right, "0"), "0")
-
-			result[left] += count
-			result[right] += count
+			right = strings.TrimLeft(right, "0")
+			result = append(result, left, cmp.Or(right, "0"))
 		default:
-			v := strconv.Itoa(must(strconv.Atoi(stone)) * 2024)
-			result[v] += count
+			v := must(strconv.Atoi(stone)) * 2024
+			result = append(result, strconv.Itoa(v))
 		}
 	}
 	return result
