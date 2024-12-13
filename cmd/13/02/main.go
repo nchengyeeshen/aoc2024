@@ -15,13 +15,13 @@ var match = regexp.MustCompile("[0-9]+")
 func main() {
 	contents := must(io.ReadAll(os.Stdin))
 
-	var blocks [][]int
+	var blocks [][]int64
 	for block := range slices.Values(strings.Split(string(contents), "\n\n")) {
-		var value []int
+		var value []int64
 		for line := range slices.Values(strings.Split(block, "\n")) {
 			digits := match.FindAllString(line, -1)
 			for _, digit := range digits {
-				value = append(value, must(strconv.Atoi(digit)))
+				value = append(value, must(strconv.ParseInt(digit, 10, 64)))
 			}
 		}
 		blocks = append(blocks, value)
@@ -38,16 +38,16 @@ func main() {
 	fmt.Printf("%.0f\n", total)
 }
 
-func compute(block []int) (int, int) {
+func compute(block []int64) (int64, int64) {
 	assert(len(block) == 6, "block must be a slice of 6")
 
 	a, b, c, d := block[0], block[2], block[1], block[3]
 
 	determinant := a*d - b*c
 
-	inverse := []int{d, -b, -c, a}
+	inverse := []int64{d, -b, -c, a}
 
-	x, y := block[4], block[5]
+	x, y := block[4]+10000000000000, block[5]+10000000000000
 
 	ansA := x*inverse[0] + y*inverse[1]
 	ansB := x*inverse[2] + y*inverse[3]
