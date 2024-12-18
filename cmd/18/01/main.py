@@ -1,12 +1,12 @@
 import sys
 from collections import deque
 
-M = 7
+M = 71
 
 # y, x
 blocked = set()
 
-for line in open(sys.argv[1]).read().splitlines()[:12]:
+for line in open(sys.argv[1]).read().splitlines()[:1024]:
     x, y = map(int, line.split(","))
     blocked.add((y, x))
 
